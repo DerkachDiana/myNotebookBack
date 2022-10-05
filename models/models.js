@@ -86,8 +86,8 @@ const Habit = sequelize.define('habit', {
     name: {type: DataTypes.STRING},
     color: {type: DataTypes.STRING},
     isDone: {type: DataTypes.BOOLEAN},
-    rowDays: {type: DataTypes.NUMBER},
-    duration: {type: DataTypes.NUMBER},
+    rowDays: {type: DataTypes.INTEGER},
+    duration: {type: DataTypes.INTEGER},
     startDate: {type: DataTypes.DATE},
 });
 
