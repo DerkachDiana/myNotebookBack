@@ -15,13 +15,11 @@ const Notebook = sequelize.define('notebook', {
 const Page = sequelize.define('page', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
   name: {type: DataTypes.STRING},
-  creationDate: {type: DataTypes.DATE},
   text: {type: DataTypes.TEXT}
 })
 
 const NotebookFile = sequelize.define('notebook_file', {
-  id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-  url: {type: DataTypes.STRING}
+  url: {type: DataTypes.STRING, primaryKey: true}
 })
 
 const NotebookBackground = sequelize.define('notebook_background', {

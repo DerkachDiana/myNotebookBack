@@ -1,10 +1,11 @@
-const express = require('express');
-const fileController = require('../../controllers/notebook/fileController');
+const express = require('express')
+const fileController = require('../../controllers/notebook/fileController')
 
-const router = express.Router();
+const router = express.Router()
 
-router.get('/:fileId', fileController.getFile);
-router.post('/:fileId', fileController.addFile);
-router.delete('/:fileId', fileController.removeFile);
+router.get('/:url', fileController.getFile)
+router.post('/', fileController.addFile)
+router.post('/:pageId', fileController.getFilesFromPage)
+router.delete('/:fileId', fileController.removeFile)
 
-module.exports = router;
+module.exports = router
