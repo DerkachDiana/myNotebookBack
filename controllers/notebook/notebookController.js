@@ -17,8 +17,8 @@ class NotebookController {
   }
 
   async addNotebook (req, res) {
-    const {name, userId, notebookBackgroundId, notebookCoverId} = req.body
-    const notebook = await Notebook.create({name, userId, notebookBackgroundId, notebookCoverId})
+    const {name, userEmail, notebookBackgroundId, notebookCoverId} = req.body
+    const notebook = await Notebook.create({name, userEmail, notebookBackgroundId, notebookCoverId})
     return res.json(notebook)
   }
 
