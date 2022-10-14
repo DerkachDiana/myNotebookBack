@@ -1,9 +1,11 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {User} = require('../models/models')
+const ApiError = require('../error/ApiError')
 
 const generateJwt = (email) => {
-  return jwt.sign({email}, process.env.SECRET_KEY,
+  return jwt.sign({email},
+    process.env.SECRET_KEY,
     {expiresIn: '24h'})
 }
 
@@ -12,36 +14,49 @@ class UserController {
     const {email, password} = req.body
 
     if (!email || !password) {
-      return
+      return ApiError.badRequest('Wrong email or password')
     }
-    const candidate = await User.findOne({where: {email}})
+    try {
+      const candidate = await User.findOne({where: {email}})
 
-    if (candidate) {
-      return
+      if (candidate) {
+        return ApiError.badRequest('User already exists')
+      }
+    } catch (e) {
+      return next(ApiError.internal(e.message))
     }
+
     const hashPassword = await bcrypt.hash(password, 5)
     const token = generateJwt(email)
 
-    await User.create({email, password: hashPassword})
+    try {
+      await User.create({email, password: hashPassword})
 
-    return res.json({token})
+      return res.json({token})
+    } catch (e) {
+      return next(ApiError.badRequest(e.message))
+    }
   }
 
   async login (req, res, next) {
     const {email, password} = req.body
-    const user = await User.findOne({where: {email}})
+    try {
+      const user = await User.findOne({where: {email}})
 
-    if (!user) {
-      return
+      if (!user) {
+        return next(ApiError.badRequest('User not found'))
+      }
+      const comparePassword = bcrypt.compareSync(password, user.password)
+
+      if (!comparePassword) {
+        return next(ApiError.badRequest('Incorrect password'))
+      }
+      const token = generateJwt(user.email)
+
+      return res.json({token})
+    } catch (e) {
+      return next(ApiError.internal(e.message))
     }
-    const comparePassword = bcrypt.compareSync(password, user.password)
-
-    if (!comparePassword) {
-      return
-    }
-    const token = generateJwt(user.email)
-
-    return res.json({token})
   }
 
   async check (req, res) {
