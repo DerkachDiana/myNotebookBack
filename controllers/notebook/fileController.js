@@ -2,9 +2,10 @@ const fs = require('node:fs/promises')
 const uuid = require('uuid')
 const path = require('path')
 const {NotebookFile} = require('../../models/models')
+const ApiError = require('../../error/ApiError')
 
 class FileController {
-  async getFilesFromPage (req, res) {
+  async getFilesFromPage (req, res, next) {
     const {pageId} = req.params
     try {
       const files = await NotebookFile.findAll({
@@ -13,11 +14,11 @@ class FileController {
 
       return res.json(files)
     } catch (e) {
-      console.log('error in getAllFilesFromPage', e)
+      return next(ApiError.internal(e.message))
     }
   }
 
-  async getFile (req, res) {
+  async getFile (req, res, next) {
     const {url} = req.params
     try {
       const file = await NotebookFile.findOne({
@@ -26,11 +27,11 @@ class FileController {
 
       return res.json(file)
     } catch (e) {
-      console.log('error in getFile ', e)
+      return next(ApiError.internal(e.message))
     }
   }
 
-  async addFile (req, res) {
+  async addFile (req, res, next) {
     const {pageId} = req.body
     const {url} = req.files
     const fileName = uuid.v4() + '.jpg'
@@ -41,11 +42,11 @@ class FileController {
 
       return res.json(file)
     } catch (e) {
-      console.log('error in addFiles:', e)
+      return next(ApiError.internal(e.message))
     }
   }
 
-  async removeFile (req, res) {
+  async removeFile (req, res, next) {
     const {fileId} = req.params
     try {
       const isDelete = await NotebookFile.destroy({
@@ -57,7 +58,7 @@ class FileController {
 
       return res.json(isDelete)
     } catch (e) {
-      console.log('error in removeFile', e)
+      return next(ApiError.internal(e.message))
     }
   }
 }
