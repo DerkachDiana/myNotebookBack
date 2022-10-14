@@ -1,5 +1,8 @@
+const path = require('path')
+const uuid = require('uuid')
 const {NotebookCover} = require('../../models/models')
 const ApiError = require('../../error/ApiError')
+const fs = require('node:fs/promises')
 
 class CoverController {
   async getCovers (req, res, next) {
@@ -24,9 +27,11 @@ class CoverController {
   }
 
   async addCover (req, res, next) {
-    const {url} = req.body
+    const {cover} = req.files
+    const coverName = uuid.v4() + '.jpg'
+    await cover.mv(path.resolve(__dirname, '../..', 'img/notebookCovers', coverName))
     try {
-      const cover = await NotebookCover.create({url})
+      const cover = await NotebookCover.create({url: coverName})
       return res.json(cover)
     } catch (e) {
       return next(ApiError.internal(e.message))
@@ -38,9 +43,12 @@ class CoverController {
     try {
       const deletedCover = await NotebookCover.destroy({
         where: {
-          id: coverId
+          url: coverId
         }
       })
+
+      await fs.rm(path.resolve(__dirname, '../..', 'img/notebookCovers', coverId))
+
       return res.json(deletedCover)
     } catch (e) {
       return next(ApiError.internal(e.message))

@@ -1,11 +1,11 @@
-const express = require('express');
-const coverController = require('../../controllers/notebook/coverController');
+const express = require('express')
+const coverController = require('../../controllers/notebook/coverController')
 
-const router = express.Router();
+const router = express.Router()
 
-router.get('/', coverController.getCovers);
-router.get('/:coverId', coverController.getCover);
-router.post('/', coverController.addCover);
-router.delete('/:coverId', coverController.removeCover);
+router.get('/', coverController.getCovers)
+router.get('/:coverId', coverController.getCover)
+router.post('/', coverController.addCover)
+router.delete('/:coverId', coverController.removeCover)
 
-module.exports = router;
+module.exports = router
