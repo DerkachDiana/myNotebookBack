@@ -35,7 +35,7 @@ class FileController {
     const {pageId} = req.body
     const {url} = req.files
     const fileName = uuid.v4() + '.jpg'
-    await url.mv(path.resolve(__dirname, '../..', 'static', fileName))
+    await url.mv(path.resolve(__dirname, '../..', 'img/static', fileName))
 
     try {
       const file = await NotebookFile.create({pageId, url: fileName})
@@ -54,7 +54,7 @@ class FileController {
           url: fileId
         }
       })
-      await fs.rm(path.resolve(__dirname, '../..', 'static', fileId))
+      await fs.rm(path.resolve(__dirname, '../..', 'img/static', fileId))
 
       return res.json(isDelete)
     } catch (e) {

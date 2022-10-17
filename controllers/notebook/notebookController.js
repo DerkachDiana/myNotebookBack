@@ -58,6 +58,7 @@ class NotebookController {
           id: notebookId
         }
       })
+
       return res.json(deletedNotebook)
     } catch (e) {
       return next(ApiError.internal(e.message))
